@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import edu.up.cs371.soccer_application.soccerPlayer.SoccerPlayer;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -633,9 +634,13 @@ public class SoccerActivity extends ActionBarActivity {
             }
 
             // attempt the database operation; if unsuccessful, flash and return
-            if (!database.readData(new File(getFilesDir(),fileName))) {
-                flash();
-                return;
+            try {
+                if (!database.readData(new File(getFilesDir(),fileName))) {
+                    flash();
+                    return;
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
 
             // add all the database teams to the spinner
@@ -674,9 +679,13 @@ public class SoccerActivity extends ActionBarActivity {
             }
 
             // attempt the operation; if unsuccessful, flash
-            if (!database.writeData(new File(getFilesDir(),fileName))) {
-                flash();
-                return;
+            try {
+                if (!database.writeData(new File(getFilesDir(),fileName))) {
+                    flash();
+                    return;
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
         }
     }

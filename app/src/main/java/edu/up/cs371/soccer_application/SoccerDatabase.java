@@ -5,6 +5,7 @@ import android.util.Log;
 import edu.up.cs371.soccer_application.soccerPlayer.SoccerPlayer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -17,6 +18,7 @@ import java.util.*;
  *
  */
 public class SoccerDatabase implements SoccerDB {
+    HashMap<String,SoccerPlayer> hashes = new HashMap<String,SoccerPlayer>(100);
 
     /**
      * add a player
@@ -26,7 +28,16 @@ public class SoccerDatabase implements SoccerDB {
     @Override
 	public boolean addPlayer(String firstName, String lastName,
 			int uniformNumber, String teamName) {
-        return false;
+        String fullname = firstName +  " " + lastName;
+        SoccerPlayer newPlayer = new SoccerPlayer(firstName, lastName, uniformNumber, teamName);
+        if(hashes.containsKey(fullname) == false){
+            hashes.put(fullname, newPlayer);
+            return true;
+        }
+        else{
+            return false;
+        }
+
 	}
 
     /**
@@ -36,7 +47,14 @@ public class SoccerDatabase implements SoccerDB {
      */
     @Override
     public boolean removePlayer(String firstName, String lastName) {
-        return false;
+        String fullName = firstName +" "+ lastName;
+        if(hashes.containsKey(fullName)){
+            hashes.remove(fullName);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -46,7 +64,15 @@ public class SoccerDatabase implements SoccerDB {
      */
     @Override
 	public SoccerPlayer getPlayer(String firstName, String lastName) {
-        return null;
+        String fullName = firstName + " " + lastName;
+        if(hashes.containsKey(fullName)){
+            return hashes.get(fullName);
+
+        }
+        else{
+            return null;
+        }
+
     }
 
     /**
@@ -56,7 +82,15 @@ public class SoccerDatabase implements SoccerDB {
      */
     @Override
     public boolean bumpGoals(String firstName, String lastName) {
-        return false;
+        String fullName = firstName+" "+lastName;
+        if(hashes.containsKey(fullName)){
+            SoccerPlayer somePlayer = hashes.get(fullName);
+            somePlayer.bumpGoals();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -66,7 +100,15 @@ public class SoccerDatabase implements SoccerDB {
      */
     @Override
     public boolean bumpAssists(String firstName, String lastName) {
-        return false;
+        String fullName = firstName+" "+lastName;
+        if(hashes.containsKey(fullName)){
+            SoccerPlayer somePlayer = hashes.get(fullName);
+            somePlayer.bumpAssists();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -76,7 +118,15 @@ public class SoccerDatabase implements SoccerDB {
      */
     @Override
     public boolean bumpShots(String firstName, String lastName) {
-        return false;
+        String fullName = firstName+" "+lastName;
+        if(hashes.containsKey(fullName)){
+            SoccerPlayer somePlayer = hashes.get(fullName);
+            somePlayer.bumpShots();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -86,7 +136,15 @@ public class SoccerDatabase implements SoccerDB {
      */
     @Override
     public boolean bumpSaves(String firstName, String lastName) {
-        return false;
+        String fullName = firstName+" "+lastName;
+        if(hashes.containsKey(fullName)){
+            SoccerPlayer somePlayer = hashes.get(fullName);
+            somePlayer.bumpSaves();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -96,7 +154,15 @@ public class SoccerDatabase implements SoccerDB {
      */
     @Override
     public boolean bumpFouls(String firstName, String lastName) {
-        return false;
+        String fullName = firstName+" "+lastName;
+        if(hashes.containsKey(fullName)){
+            SoccerPlayer somePlayer = hashes.get(fullName);
+            somePlayer.bumpFouls();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -106,7 +172,15 @@ public class SoccerDatabase implements SoccerDB {
      */
     @Override
     public boolean bumpYellowCards(String firstName, String lastName) {
-        return false;
+        String fullName = firstName+" "+lastName;
+        if(hashes.containsKey(fullName)){
+            SoccerPlayer somePlayer = hashes.get(fullName);
+            somePlayer.bumpYellowCards();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -116,7 +190,15 @@ public class SoccerDatabase implements SoccerDB {
      */
     @Override
     public boolean bumpRedCards(String firstName, String lastName) {
-        return false;
+        String fullName = firstName+" "+lastName;
+        if(hashes.containsKey(fullName)){
+            SoccerPlayer somePlayer = hashes.get(fullName);
+            somePlayer.bumpRedCards();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -127,7 +209,21 @@ public class SoccerDatabase implements SoccerDB {
     @Override
     // report number of players on a given team (or all players, if null)
 	public int numPlayers(String teamName) {
-        return -1;
+
+        int count = 0;
+        if(teamName == null){
+            return hashes.size();
+        }
+        else{
+           Collection<SoccerPlayer> myCollection = hashes.values();
+           for(SoccerPlayer player : myCollection){
+               if(player.getTeamName().equals(teamName)){
+                   count++;
+
+               }
+            }
+        }
+        return count;
 	}
 
     /**
@@ -138,7 +234,27 @@ public class SoccerDatabase implements SoccerDB {
 	// get the nTH player
 	@Override
     public SoccerPlayer playerNum(int idx, String teamName) {
-        return null;
+        int count = 0;
+        Collection<SoccerPlayer> myCollection = hashes.values();
+        if(teamName == null) {
+            for (SoccerPlayer player : myCollection) {
+                if (count == idx) {
+                    return player;
+                }
+                count++;
+            }
+        }
+        else{
+                for(SoccerPlayer player : myCollection){
+                    if(player.getTeamName().equals(teamName)){
+                        if(count == idx){
+                            return player;
+                        }
+                    }
+                    count++;
+                }
+            }
+            return null;
     }
 
     /**
@@ -148,8 +264,20 @@ public class SoccerDatabase implements SoccerDB {
      */
 	// read data from file
     @Override
-	public boolean readData(File file) {
-        return file.exists();
+	public boolean readData(File file) throws FileNotFoundException {
+        if(file == null){
+            return false;
+        }
+        Scanner sc = null;
+        sc = new Scanner(file);
+        while(sc.hasNextLine()){
+            String s = sc.next();
+            System.out.println(s);
+
+        }
+        return true;
+
+        //return file.exists();
 	}
 
     /**
@@ -159,8 +287,30 @@ public class SoccerDatabase implements SoccerDB {
      */
 	// write data to file
     @Override
-	public boolean writeData(File file) {
-        return false;
+	public boolean writeData(File file) throws FileNotFoundException {
+        if(file == null){
+            return false;
+        }
+        PrintWriter writer = new PrintWriter(file);
+        //writer.println(logString("testing"));
+        int count = 0;
+        Collection<SoccerPlayer> myCollection = hashes.values();
+        for(SoccerPlayer s : myCollection){
+            writer.println(logString(s.getFirstName()));
+            writer.println(logString(s.getLastName()));
+            writer.println(logString(s.getTeamName()));
+            writer.println(logString("" +s.getAssists()));
+            writer.println(logString(""+s.getFouls()));
+            writer.println(logString(""+s.getGoals()));
+            writer.println(logString(""+s.getRedCards()));
+            writer.println(logString(""+s.getSaves()));
+            writer.println(logString(""+s.getShots()));
+            writer.println(logString(""+s.getUniform()));
+            writer.println(logString(""+s.getYellowCards()));
+        }
+        writer.close();
+        return true;
+
 	}
 
     /**
